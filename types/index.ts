@@ -7,6 +7,7 @@ export type AgentSummary = {
   state: string;
   city: string;
   description: string;
+  services: string[];
 };
 
 export type AgentDetail = AgentSummary & {

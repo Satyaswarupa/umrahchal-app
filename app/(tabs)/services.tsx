@@ -1,15 +1,10 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { SERVICES } from '@/constants/services';
 import { useTheme } from '@/context/ThemeContext';
-
-const SERVICES = [
-  { title: 'Hotel', description: 'Comfortable stays near the Haramain, arranged by your agent.', icon: 'bed-outline' as const },
-  { title: 'Transport', description: 'Local transport between cities and holy sites.', icon: 'bus-outline' as const },
-  { title: 'Visa Service', description: 'End-to-end assistance with Hajj and Umrah visa paperwork.', icon: 'document-text-outline' as const },
-  { title: 'Air Ticket', description: 'Flight booking support for your pilgrimage travel.', icon: 'airplane-outline' as const },
-];
 
 export default function ServicesScreen() {
   const { colors, edge } = useTheme();
@@ -19,20 +14,32 @@ export default function ServicesScreen() {
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.header}>
           <Text style={[styles.title, { color: colors.text }]}>Services</Text>
-          <Text style={[styles.subtitle, { color: colors.textMuted }]}>Services offered by agents on UmrahChal.</Text>
+          <Text style={[styles.subtitle, { color: colors.textMuted }]}>
+            Tap a service to see verified agents on UmrahChal who offer it.
+          </Text>
         </View>
 
         <View style={styles.list}>
           {SERVICES.map((service) => (
-            <View key={service.title} style={[styles.row, { backgroundColor: colors.surface }, edge.raised]}>
+            <Pressable
+              key={service.slug}
+              onPress={() => router.push({ pathname: '/agents', params: { service: service.slug } })}
+              style={({ pressed }) => [
+                styles.row,
+                { backgroundColor: colors.surface },
+                pressed ? edge.pressed : edge.raised,
+              ]}>
               <View style={[styles.iconWrap, { backgroundColor: colors.surface }, edge.pressed]}>
-                <Ionicons name={service.icon} size={22} color={colors.accentText} />
+                <Text style={styles.iconEmoji}>{service.icon}</Text>
               </View>
               <View style={styles.rowText}>
-                <Text style={[styles.rowTitle, { color: colors.text }]}>{service.title}</Text>
-                <Text style={[styles.rowDescription, { color: colors.textMuted }]}>{service.description}</Text>
+                <Text style={[styles.rowTitle, { color: colors.text }]}>{service.label}</Text>
+                <Text style={[styles.rowDescription, { color: colors.textMuted }]}>
+                  See agents offering {service.label.toLowerCase()}.
+                </Text>
               </View>
-            </View>
+              <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
+            </Pressable>
           ))}
         </View>
       </ScrollView>
@@ -61,6 +68,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  iconEmoji: { fontSize: 20 },
   rowText: { flex: 1 },
   rowTitle: { fontSize: 15, fontWeight: '700' },
   rowDescription: { marginTop: 2, fontSize: 12, lineHeight: 17 },

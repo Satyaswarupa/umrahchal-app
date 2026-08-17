@@ -145,7 +145,10 @@ export default function HomeScreen() {
         <HeroGlow />
         <SafeAreaView edges={['top']} style={styles.heroSafeArea}>
           <Text style={styles.brandName}>UmrahChal</Text>
-          <Text style={styles.greeting}>Assalamu Alaikum{user ? `, ${user.name}` : ''}</Text>
+          <Text style={styles.greeting}>
+            Assalamu Alaikum{user ? ',' : ''}
+            {user ? `\n${user.name}` : ''}
+          </Text>
           <Text style={styles.quote}>{HERO_QUOTE}</Text>
         </SafeAreaView>
       </View>
@@ -303,7 +306,7 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     letterSpacing: 0.5,
   },
-  greeting: { marginTop: 20, color: '#fff', fontSize: 22, fontWeight: '800' },
+  greeting: { marginTop: 20, color: '#fff', fontSize: 22, fontWeight: '800', lineHeight: 28 },
   quote: { marginTop: 6, color: '#E4EAE8', fontSize: 14, fontStyle: 'italic', lineHeight: 19 },
   searchCard: {
     marginHorizontal: 20,

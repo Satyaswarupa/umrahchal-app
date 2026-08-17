@@ -9,13 +9,14 @@ import { SelectField } from '@/components/ui/SelectField';
 import { Button } from '@/components/ui/Button';
 import { useTheme } from '@/context/ThemeContext';
 import { getCitiesForState, INDIA_STATES } from '@/constants/locations';
+import { SERVICES } from '@/constants/services';
 import { api, ApiError } from '@/lib/api';
 import { LocationError, resolveNearbyLocation } from '@/lib/location';
 import type { AgentSummary } from '@/types';
 
 export default function AgentsScreen() {
   const { colors } = useTheme();
-  const params = useLocalSearchParams<{ state?: string; city?: string }>();
+  const params = useLocalSearchParams<{ state?: string; city?: string; service?: string }>();
   const [state, setState] = useState(params.state ?? '');
   const [city, setCity] = useState(params.city ?? '');
   const [agents, setAgents] = useState<AgentSummary[] | null>(null);
@@ -24,23 +25,28 @@ export default function AgentsScreen() {
   const [error, setError] = useState<string | null>(null);
 
   const cities = getCitiesForState(state);
+  const serviceLabel = SERVICES.find((s) => s.slug === params.service)?.label ?? '';
 
-  const load = useCallback(async (currentState: string, currentCity: string) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const query = new URLSearchParams();
-      query.set('country', 'India');
-      if (currentState) query.set('state', currentState);
-      if (currentCity) query.set('city', currentCity);
-      const data = await api.get<{ agents: AgentSummary[] }>(`/api/agents?${query.toString()}`);
-      setAgents(data.agents);
-    } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Could not load agents. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const load = useCallback(
+    async (currentState: string, currentCity: string) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const query = new URLSearchParams();
+        query.set('country', 'India');
+        if (currentState) query.set('state', currentState);
+        if (currentCity) query.set('city', currentCity);
+        if (params.service) query.set('service', params.service);
+        const data = await api.get<{ agents: AgentSummary[] }>(`/api/agents?${query.toString()}`);
+        setAgents(data.agents);
+      } catch (err) {
+        setError(err instanceof ApiError ? err.message : 'Could not load agents. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    },
+    [params.service],
+  );
 
   useEffect(() => {
     load(params.state ?? '', params.city ?? '');
@@ -65,7 +71,11 @@ export default function AgentsScreen() {
   return (
     <SafeAreaView style={[styles.screen, { backgroundColor: colors.base }]} edges={['bottom']}>
       <View style={styles.header}>
-        <Text style={[styles.subtitle, { color: colors.textMuted }]}>Search verified travel agents by location.</Text>
+        <Text style={[styles.subtitle, { color: colors.textMuted }]}>
+          {serviceLabel
+            ? `Verified agents offering ${serviceLabel}. Narrow it down by location below.`
+            : 'Search verified travel agents by location.'}
+        </Text>
       </View>
 
       <View style={styles.filters}>
@@ -120,8 +130,8 @@ export default function AgentsScreen() {
           <Ionicons name="location-outline" size={32} color={colors.textMuted} />
           <Text style={[styles.stateText, { color: colors.textMuted }]}>
             {state
-              ? `No verified agents found in ${[city, state].filter(Boolean).join(', ')} yet.`
-              : 'No verified agents found for this location yet.'}
+              ? `No verified agents${serviceLabel ? ` offering ${serviceLabel}` : ''} found in ${[city, state].filter(Boolean).join(', ')} yet.`
+              : `No verified agents${serviceLabel ? ` offering ${serviceLabel}` : ''} found for this location yet.`}
           </Text>
         </View>
       ) : (
