@@ -31,24 +31,6 @@ import {
 } from '@/lib/location';
 import type { AgentSummary } from '@/types';
 
-const STEPS = [
-  {
-    title: 'Search Your Location',
-    description: 'Search your city or tap Near Me to find Umrah agents operating near you.',
-    icon: 'location-outline' as const,
-  },
-  {
-    title: 'Review Verified Agents',
-    description: "Browse company details for agents that passed UmrahChal's verification.",
-    icon: 'shield-checkmark-outline' as const,
-  },
-  {
-    title: 'Contact Directly',
-    description: 'Call or message the agent on WhatsApp to discuss your travel plans.',
-    icon: 'chatbubbles-outline' as const,
-  },
-];
-
 const HERO_QUOTE = 'Every journey begins with a sincere heart.';
 
 type NearbyState = {
@@ -266,24 +248,6 @@ export default function HomeScreen() {
         )}
       </View>
 
-      <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>How UmrahChal Works</Text>
-        <View style={styles.stepsList}>
-          {STEPS.map((step, index) => (
-            <View key={step.title} style={[styles.stepCard, { backgroundColor: colors.surface }, edge.raised]}>
-              <View style={styles.stepIconWrap}>
-                <Ionicons name={step.icon} size={20} color="#fff" />
-              </View>
-              <View style={styles.stepTextWrap}>
-                <Text style={[styles.stepNumber, { color: Brand.accent }]}>STEP {index + 1}</Text>
-                <Text style={[styles.stepTitle, { color: colors.text }]}>{step.title}</Text>
-                <Text style={[styles.stepDescription, { color: colors.textMuted }]}>{step.description}</Text>
-              </View>
-            </View>
-          ))}
-        </View>
-      </View>
-
       <View style={[styles.promoCard, edge.raised]}>
         <Text style={styles.promoTitle}>Are you an Umrah travel agent?</Text>
         <Text style={styles.promoBody}>
@@ -400,25 +364,6 @@ const styles = StyleSheet.create({
   nearbyPromptButton: { marginTop: 4, alignSelf: 'stretch' },
   viewAllLink: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingVertical: 8 },
   viewAllText: { fontSize: 13, fontWeight: '600' },
-  stepsList: { marginTop: 20, gap: 14 },
-  stepCard: {
-    flexDirection: 'row',
-    gap: 14,
-    padding: 16,
-    borderRadius: 16,
-  },
-  stepIconWrap: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: Brand.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  stepTextWrap: { flex: 1 },
-  stepNumber: { fontSize: 11, fontWeight: '700', letterSpacing: 1 },
-  stepTitle: { marginTop: 2, fontSize: 15, fontWeight: '700' },
-  stepDescription: { marginTop: 4, fontSize: 13, lineHeight: 18 },
   promoCard: {
     marginHorizontal: 20,
     marginTop: 32,

@@ -1,18 +1,27 @@
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Linking, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Linking, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 
 import { Button } from '@/components/ui/Button';
 import { VerifiedBadge } from '@/components/VerifiedBadge';
 import { Brand } from '@/constants/theme';
+import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import { api, ApiError } from '@/lib/api';
 import { toTelLink, toWhatsappLink } from '@/lib/contact-links';
 import type { AgentDetail } from '@/types';
 
+function promptLogin() {
+  Alert.alert('Please sign up or login', 'Create a free account to call or WhatsApp this agent.', [
+    { text: 'Not now', style: 'cancel' },
+    { text: 'Log In', onPress: () => router.push('/profile') },
+  ]);
+}
+
 export default function AgentDetailScreen() {
   const { colors, edge } = useTheme();
+  const { user } = useAuth();
   const { id } = useLocalSearchParams<{ id: string }>();
   const [agent, setAgent] = useState<AgentDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -81,14 +90,16 @@ export default function AgentDetailScreen() {
       <View style={styles.actions}>
         <Button
           label="Call Now"
-          onPress={() => Linking.openURL(toTelLink(agent.mobileNumber))}
-          style={styles.actionButton}
+          onPress={() => (user ? Linking.openURL(toTelLink(agent.mobileNumber)) : promptLogin())}
+          style={[styles.actionButton, !user && styles.actionButtonDisabled]}
         />
         <Button
           label="WhatsApp"
           variant="whatsapp"
-          onPress={() => Linking.openURL(toWhatsappLink(agent.whatsappNumber, agent.companyName))}
-          style={styles.actionButton}
+          onPress={() =>
+            user ? Linking.openURL(toWhatsappLink(agent.whatsappNumber, agent.companyName)) : promptLogin()
+          }
+          style={[styles.actionButton, !user && styles.actionButtonDisabled]}
         />
       </View>
     </ScrollView>
@@ -123,4 +134,5 @@ const styles = StyleSheet.create({
   detailValue: { marginTop: 4, fontSize: 14 },
   actions: { flexDirection: 'row', gap: 12, marginTop: 24 },
   actionButton: { flex: 1 },
+  actionButtonDisabled: { opacity: 0.4 },
 });

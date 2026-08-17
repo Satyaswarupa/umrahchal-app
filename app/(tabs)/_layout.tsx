@@ -1,40 +1,42 @@
-import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { HapticTab } from '@/components/haptic-tab';
-import { SideMenu } from '@/components/SideMenu';
+import { Brand } from '@/constants/theme';
 import { useTheme } from '@/context/ThemeContext';
-import type { EdgeStyles, ThemeColors } from '@/constants/theme';
+import type { EdgeStyles } from '@/constants/theme';
 
 type IconName = keyof typeof Ionicons.glyphMap;
+
+const NAV_ACTIVE_TINT = '#fff';
+const NAV_INACTIVE_TINT = 'rgba(255,255,255,0.55)';
+const NAV_ACTIVE_PILL = 'rgba(255,255,255,0.18)';
 
 function TabIcon({
   name,
   activeName,
   focused,
-  colors,
   edge,
 }: {
   name: IconName;
   activeName: IconName;
   focused: boolean;
-  colors: ThemeColors;
   edge: EdgeStyles;
 }) {
   return (
-    <View style={[styles.tabIconWrap, focused && { backgroundColor: colors.surface }, focused && edge.raised]}>
-      <Ionicons name={focused ? activeName : name} size={20} color={focused ? colors.accentText : colors.tabInactive} />
+    <View style={[styles.tabIconWrap, focused && { backgroundColor: NAV_ACTIVE_PILL }, focused && edge.raised]}>
+      <Ionicons name={focused ? activeName : name} size={20} color={focused ? NAV_ACTIVE_TINT : NAV_INACTIVE_TINT} />
     </View>
   );
 }
 
 export default function TabLayout() {
-  const [menuOpen, setMenuOpen] = useState(false);
   const insets = useSafeAreaInsets();
-  const { colors, edge } = useTheme();
+  const { edge } = useTheme();
+  const { width: screenWidth } = useWindowDimensions();
+  const sideMargin = screenWidth * 0.05;
 
   return (
     <View style={styles.flex}>
@@ -42,24 +44,32 @@ export default function TabLayout() {
         screenOptions={{
           headerShown: false,
           tabBarButton: HapticTab,
-          tabBarActiveTintColor: colors.accentText,
-          tabBarInactiveTintColor: colors.tabInactive,
+          tabBarActiveTintColor: NAV_ACTIVE_TINT,
+          tabBarInactiveTintColor: NAV_INACTIVE_TINT,
           tabBarShowLabel: true,
           tabBarLabelStyle: styles.tabBarLabel,
           tabBarItemStyle: styles.tabBarItem,
-          tabBarStyle: [
-            styles.tabBar,
-            { left: 20, right: 20, bottom: insets.bottom + 4, backgroundColor: colors.surface },
-            edge.raised,
-          ],
+          tabBarStyle: {
+            position: 'absolute',
+            height: 64,
+            borderRadius: 28,
+            borderTopWidth: 0,
+            paddingTop: 0,
+            paddingHorizontal: 10,
+            left: sideMargin,
+            right: sideMargin,
+            insetInlineStart: sideMargin,
+            insetInlineEnd: sideMargin,
+            bottom: insets.bottom + 4,
+            backgroundColor: Brand.primary,
+            ...edge.raised,
+          },
         }}>
         <Tabs.Screen
           name="index"
           options={{
             title: 'Home',
-            tabBarIcon: ({ focused }) => (
-              <TabIcon name="home-outline" activeName="home" focused={focused} colors={colors} edge={edge} />
-            ),
+            tabBarIcon: ({ focused }) => <TabIcon name="home-outline" activeName="home" focused={focused} edge={edge} />,
           }}
         />
         <Tabs.Screen
@@ -67,7 +77,7 @@ export default function TabLayout() {
           options={{
             title: 'Services',
             tabBarIcon: ({ focused }) => (
-              <TabIcon name="construct-outline" activeName="construct" focused={focused} colors={colors} edge={edge} />
+              <TabIcon name="construct-outline" activeName="construct" focused={focused} edge={edge} />
             ),
           }}
         />
@@ -76,7 +86,7 @@ export default function TabLayout() {
           options={{
             title: 'Packages',
             tabBarIcon: ({ focused }) => (
-              <TabIcon name="briefcase-outline" activeName="briefcase" focused={focused} colors={colors} edge={edge} />
+              <TabIcon name="briefcase-outline" activeName="briefcase" focused={focused} edge={edge} />
             ),
           }}
         />
@@ -85,32 +95,17 @@ export default function TabLayout() {
           options={{
             title: 'Profile',
             tabBarIcon: ({ focused }) => (
-              <TabIcon
-                name="person-circle-outline"
-                activeName="person-circle"
-                focused={focused}
-                colors={colors}
-                edge={edge}
-              />
+              <TabIcon name="person-circle-outline" activeName="person-circle" focused={focused} edge={edge} />
             ),
           }}
         />
       </Tabs>
 
-      <SafeAreaView edges={['top']} pointerEvents="box-none" style={styles.menuButtonSafeArea}>
-        <Pressable
-          onPress={() => setMenuOpen(true)}
-          hitSlop={10}
-          style={({ pressed }) => [
-            styles.menuButton,
-            { backgroundColor: colors.surface },
-            pressed ? edge.pressed : edge.raised,
-          ]}>
-          <Ionicons name="menu" size={20} color={colors.accentText} />
-        </Pressable>
+      <SafeAreaView edges={['top']} pointerEvents="none" style={styles.menuButtonSafeArea}>
+        <View style={styles.menuButton}>
+          <Image source={require('../../assets/images/icon.png')} style={styles.menuLogo} resizeMode="contain" />
+        </View>
       </SafeAreaView>
-
-      <SideMenu visible={menuOpen} onClose={() => setMenuOpen(false)} />
     </View>
   );
 }
@@ -119,22 +114,15 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   menuButtonSafeArea: { position: 'absolute', top: 0, left: 0, right: 0 },
   menuButton: {
-    marginTop: 10,
+    marginTop: 8,
     marginLeft: 16,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 46,
+    height: 46,
+    borderRadius: 23,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  tabBar: {
-    position: 'absolute',
-    height: 64,
-    borderRadius: 28,
-    borderTopWidth: 0,
-    paddingTop: 0,
-    paddingHorizontal: 26,
-  },
+  menuLogo: { width: 34, height: 34 },
   tabBarItem: { paddingTop: 8 },
   tabBarLabel: { fontSize: 10.5, fontWeight: '700', marginTop: 2 },
   tabIconWrap: {

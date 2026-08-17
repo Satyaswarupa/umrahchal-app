@@ -1,15 +1,24 @@
-import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 
 import { Brand } from '@/constants/theme';
+import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import { toTelLink, toWhatsappLink } from '@/lib/contact-links';
 import type { AgentSummary } from '@/types';
 import { VerifiedBadge } from './VerifiedBadge';
 
+function promptLogin() {
+  Alert.alert('Please sign up or login', 'Create a free account to call or WhatsApp this agent.', [
+    { text: 'Not now', style: 'cancel' },
+    { text: 'Log In', onPress: () => router.push('/profile') },
+  ]);
+}
+
 export function AgentCard({ agent }: { agent: AgentSummary }) {
   const { colors, edge } = useTheme();
+  const { user } = useAuth();
 
   return (
     <Pressable
@@ -34,23 +43,20 @@ export function AgentCard({ agent }: { agent: AgentSummary }) {
 
       <View style={styles.actions}>
         <Pressable
-          style={[styles.actionButton, styles.callButton, edge.raised]}
-          onPress={() => Linking.openURL(toTelLink(agent.mobileNumber))}>
+          style={[styles.actionButton, styles.callButton, edge.raised, !user && styles.actionButtonDisabled]}
+          onPress={() => (user ? Linking.openURL(toTelLink(agent.mobileNumber)) : promptLogin())}>
           <Ionicons name="call" size={16} color="#fff" />
           <Text style={styles.actionText}>Call</Text>
         </Pressable>
         <Pressable
-          style={[styles.actionButton, styles.whatsappButton, edge.raised]}
-          onPress={() => Linking.openURL(toWhatsappLink(agent.whatsappNumber, agent.companyName))}>
+          style={[styles.actionButton, styles.whatsappButton, edge.raised, !user && styles.actionButtonDisabled]}
+          onPress={() =>
+            user ? Linking.openURL(toWhatsappLink(agent.whatsappNumber, agent.companyName)) : promptLogin()
+          }>
           <Ionicons name="logo-whatsapp" size={16} color="#fff" />
           <Text style={styles.actionText}>WhatsApp</Text>
         </Pressable>
       </View>
-
-      <Pressable style={styles.detailsLink} onPress={() => router.push(`/agents/${agent.id}`)}>
-        <Text style={[styles.detailsText, { color: colors.accentText }]}>View Details</Text>
-        <Ionicons name="arrow-forward" size={14} color={colors.accentText} />
-      </Pressable>
     </Pressable>
   );
 }
@@ -81,13 +87,6 @@ const styles = StyleSheet.create({
   },
   callButton: { backgroundColor: Brand.primary },
   whatsappButton: { backgroundColor: Brand.whatsapp },
+  actionButtonDisabled: { opacity: 0.4 },
   actionText: { color: '#fff', fontSize: 13, fontWeight: '700' },
-  detailsLink: {
-    marginTop: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 4,
-  },
-  detailsText: { fontSize: 13, fontWeight: '600' },
 });

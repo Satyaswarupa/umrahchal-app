@@ -3,7 +3,8 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
-import { AuthProvider } from '@/context/AuthContext';
+import { LoadingScreen } from '@/components/LoadingScreen';
+import { AuthProvider, useAuth } from '@/context/AuthContext';
 import { ThemeProvider, useTheme } from '@/context/ThemeContext';
 import { Brand } from '@/constants/theme';
 
@@ -22,6 +23,7 @@ function detailScreenOptions(title: string, background: string, text: string) {
 
 function RootNavigator() {
   const { scheme, colors } = useTheme();
+  const { loading } = useAuth();
 
   const navTheme = {
     ...(scheme === 'dark' ? DarkTheme : DefaultTheme),
@@ -37,20 +39,28 @@ function RootNavigator() {
 
   return (
     <NavigationThemeProvider value={navTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="agents/index"
-          options={detailScreenOptions('Find Agents', colors.base, colors.text)}
-        />
-        <Stack.Screen
-          name="agents/[id]"
-          options={detailScreenOptions('Agent Details', colors.base, colors.text)}
-        />
-        <Stack.Screen name="enquiry" options={detailScreenOptions('My Enquiry', colors.base, colors.text)} />
-        <Stack.Screen name="about" options={detailScreenOptions('About', colors.base, colors.text)} />
-      </Stack>
-      <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
+      {loading ? (
+        <LoadingScreen />
+      ) : (
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="agents/index"
+            options={detailScreenOptions('Find Agents', colors.base, colors.text)}
+          />
+          <Stack.Screen
+            name="agents/[id]"
+            options={detailScreenOptions('Agent Details', colors.base, colors.text)}
+          />
+          <Stack.Screen name="enquiry" options={detailScreenOptions('My Enquiry', colors.base, colors.text)} />
+          <Stack.Screen
+            name="how-it-works"
+            options={detailScreenOptions('How UmrahChal Works', colors.base, colors.text)}
+          />
+          <Stack.Screen name="about" options={detailScreenOptions('About', colors.base, colors.text)} />
+        </Stack>
+      )}
+      <StatusBar style={loading ? 'light' : scheme === 'dark' ? 'light' : 'dark'} />
     </NavigationThemeProvider>
   );
 }
