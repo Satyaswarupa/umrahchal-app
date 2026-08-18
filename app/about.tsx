@@ -23,7 +23,7 @@ export default function AboutScreen() {
     <ScrollView style={[styles.screen, { backgroundColor: colors.base }]} contentContainerStyle={styles.content}>
       <Text style={[styles.heading, { color: colors.text }]}>Our Mission</Text>
       <Text style={[styles.body, { color: colors.textMuted }]}>
-        UmrahChal connects pilgrims with verified, trustworthy Umrah travel agents across India,
+        UmrahJao connects pilgrims with verified, trustworthy Umrah travel agents across India,
         making it simple and safe to plan a meaningful journey — with transparent, direct
         communication and no hidden middlemen.
       </Text>

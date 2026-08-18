@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Tabs } from 'expo-router';
-import { Image, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { router, Tabs, usePathname } from 'expo-router';
+import { Image, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { HapticTab } from '@/components/haptic-tab';
@@ -10,9 +11,9 @@ import type { EdgeStyles } from '@/constants/theme';
 
 type IconName = keyof typeof Ionicons.glyphMap;
 
-const NAV_ACTIVE_TINT = '#fff';
+const NAV_ACTIVE_TINT = Brand.light;
 const NAV_INACTIVE_TINT = 'rgba(255,255,255,0.55)';
-const NAV_ACTIVE_PILL = 'rgba(255,255,255,0.18)';
+const NAV_ACTIVE_PILL = 'rgba(255,255,255,0.14)';
 
 function TabIcon({
   name,
@@ -34,9 +35,11 @@ function TabIcon({
 
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
-  const { edge } = useTheme();
+  const { colors, edge } = useTheme();
   const { width: screenWidth } = useWindowDimensions();
   const sideMargin = screenWidth * 0.05;
+  const pathname = usePathname();
+  const isHome = pathname === '/' || pathname === '/index';
 
   return (
     <View style={styles.flex}>
@@ -49,6 +52,14 @@ export default function TabLayout() {
           tabBarShowLabel: true,
           tabBarLabelStyle: styles.tabBarLabel,
           tabBarItemStyle: styles.tabBarItem,
+          tabBarBackground: () => (
+            <LinearGradient
+              colors={[Brand.primary, Brand.darkest]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={StyleSheet.absoluteFill}
+            />
+          ),
           tabBarStyle: {
             position: 'absolute',
             height: 64,
@@ -61,7 +72,7 @@ export default function TabLayout() {
             insetInlineStart: sideMargin,
             insetInlineEnd: sideMargin,
             bottom: insets.bottom + 4,
-            backgroundColor: Brand.primary,
+            overflow: 'hidden',
             ...edge.raised,
           },
         }}>
@@ -101,10 +112,19 @@ export default function TabLayout() {
         />
       </Tabs>
 
-      <SafeAreaView edges={['top']} pointerEvents="none" style={styles.menuButtonSafeArea}>
-        <View style={styles.menuButton}>
-          <Image source={require('../../assets/images/icon.png')} style={styles.menuLogo} resizeMode="contain" />
-        </View>
+      <SafeAreaView edges={['top']} pointerEvents="box-none" style={styles.menuButtonSafeArea}>
+        {isHome ? (
+          <View style={styles.menuButton} pointerEvents="none">
+            <Image source={require('../../assets/images/icon.png')} style={styles.menuLogo} resizeMode="contain" />
+          </View>
+        ) : (
+          <Pressable
+            onPress={() => router.push('/')}
+            hitSlop={8}
+            style={[styles.backButton, { backgroundColor: colors.surface }, edge.raised]}>
+            <Ionicons name="chevron-back" size={22} color={colors.text} />
+          </Pressable>
+        )}
       </SafeAreaView>
     </View>
   );
@@ -118,10 +138,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 8,
     marginLeft: 16,
-    height: 46,
-    paddingHorizontal: 12,
+    height: 54,
+    paddingHorizontal: 8,
   },
-  menuLogo: { width: 28, height: 28, borderRadius: 14 },
+  menuLogo: { width: 40, height: 40, borderRadius: 20 },
+  backButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginTop: 15,
+    marginLeft: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   tabBarItem: { paddingTop: 8 },
   tabBarLabel: { fontSize: 10.5, fontWeight: '700', marginTop: 2 },
   tabIconWrap: {

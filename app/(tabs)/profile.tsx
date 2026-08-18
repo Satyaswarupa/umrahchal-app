@@ -11,12 +11,13 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
+import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button } from '@/components/ui/Button';
 import { TextField } from '@/components/ui/TextField';
-import { Brand } from '@/constants/theme';
+import { Brand, Fonts } from '@/constants/theme';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme, type ThemeMode } from '@/context/ThemeContext';
 import { ApiError } from '@/lib/api';
@@ -36,7 +37,7 @@ const SOCIAL_LINKS = [
 const MENU_ITEMS = [
   { label: 'My Enquiry', icon: 'chatbox-ellipses-outline' as const, route: '/enquiry' as const },
   { label: 'Find Agents', icon: 'search-outline' as const, route: '/agents' as const },
-  { label: 'How UmrahChal Works', icon: 'compass-outline' as const, route: '/how-it-works' as const },
+  { label: 'How UmrahJao Works', icon: 'compass-outline' as const, route: '/how-it-works' as const },
   { label: 'About', icon: 'information-circle-outline' as const, route: '/about' as const },
 ];
 
@@ -67,7 +68,7 @@ function MenuLinksSection() {
 function VersionFooter() {
   const { colors } = useTheme();
   const version = Constants.expoConfig?.version ?? '1.0.0';
-  return <Text style={[styles.versionText, { color: colors.textMuted }]}>UmrahChal · v{version}</Text>;
+  return <Text style={[styles.versionText, { color: colors.textMuted }]}>UmrahJao · v{version}</Text>;
 }
 
 function SettingsSection() {
@@ -148,7 +149,11 @@ function ProfileView() {
   return (
     <SafeAreaView style={[styles.screen, { backgroundColor: colors.base }]} edges={['top']}>
       <ScrollView contentContainerStyle={styles.profileScroll} showsVerticalScrollIndicator={false}>
-        <View style={styles.welcomeCard}>
+        <LinearGradient
+          colors={[Brand.primary, Brand.darkest]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.welcomeCard}>
           <View style={styles.welcomeGlowOne} />
           <View style={styles.welcomeGlowTwo} />
           <View style={[styles.welcomeAvatar, edge.raised]}>
@@ -159,14 +164,25 @@ function ProfileView() {
             {user!.email}
           </Text>
           <View style={styles.verifiedBadge}>
-            <Ionicons name="shield-checkmark" size={13} color="#fff" />
+            <Ionicons name="shield-checkmark" size={13} color="#22160A" />
             <Text style={styles.verifiedBadgeText}>Pilgrim Account</Text>
           </View>
-        </View>
+        </LinearGradient>
 
         <View style={styles.settingsSection}>
           <MenuLinksSection />
           <SettingsSection />
+
+          <LinearGradient
+            colors={[Brand.primary, Brand.darkest]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.labbaikCard}>
+            <Text style={styles.labbaikText}>لَبَّيْكَ اللَّهُمَّ لَبَّيْكَ</Text>
+            <Text style={styles.labbaikSub}>
+              UmrahJao is a directory. We never sell packages, take payment or add a fee to your trip.
+            </Text>
+          </LinearGradient>
         </View>
 
         <View style={[styles.divider, { backgroundColor: colors.divider }]} />
@@ -228,7 +244,7 @@ function AuthForm() {
             {mode === 'login' ? 'Welcome back' : 'Create your account'}
           </Text>
           <Text style={[styles.subtitle, { color: colors.textMuted }]}>
-            {mode === 'login' ? 'Log in to save and contact Umrah agents.' : 'Sign up to get started with UmrahChal.'}
+            {mode === 'login' ? 'Log in to save and contact Umrah agents.' : 'Sign up to get started with UmrahJao.'}
           </Text>
 
           <View style={styles.form}>
@@ -272,7 +288,7 @@ function AuthForm() {
 
           <View style={styles.switchRow}>
             <Text style={[styles.switchText, { color: colors.textMuted }]}>
-              {mode === 'login' ? "New to UmrahChal?" : 'Already have an account?'}
+              {mode === 'login' ? "New to UmrahJao?" : 'Already have an account?'}
             </Text>
             <Text
               style={[styles.switchLink, { color: colors.accentText }]}
@@ -299,7 +315,7 @@ function AuthForm() {
 const styles = StyleSheet.create({
   screen: { flex: 1 },
   centered: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  formScroll: { paddingHorizontal: 24, paddingTop: 64, paddingBottom: 130 },
+  formScroll: { paddingHorizontal: 24, paddingTop: 72, paddingBottom: 130 },
   title: { fontSize: 24, fontWeight: '800' },
   subtitle: { marginTop: 6, fontSize: 14 },
   form: { marginTop: 28, gap: 16 },
@@ -310,11 +326,10 @@ const styles = StyleSheet.create({
   switchLink: { fontSize: 13, fontWeight: '700' },
   welcomeCard: {
     marginHorizontal: 24,
-    marginTop: 64,
+    marginTop: 72,
     borderRadius: 24,
     paddingHorizontal: 20,
     paddingVertical: 26,
-    backgroundColor: Brand.primary,
     overflow: 'hidden',
     alignItems: 'center',
   },
@@ -355,9 +370,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 999,
-    backgroundColor: 'rgba(255,255,255,0.14)',
+    backgroundColor: Brand.light,
   },
-  verifiedBadgeText: { fontSize: 11, fontWeight: '700', color: '#fff', letterSpacing: 0.3 },
+  verifiedBadgeText: { fontSize: 11, fontWeight: '800', color: '#22160A', letterSpacing: 0.3 },
+  labbaikCard: {
+    borderRadius: 22,
+    padding: 18,
+    overflow: 'hidden',
+  },
+  labbaikText: { fontFamily: Fonts.serif, fontSize: 19, color: Brand.light, lineHeight: 26 },
+  labbaikSub: { marginTop: 8, fontSize: 11.5, color: 'rgba(255,255,255,0.72)', lineHeight: 17 },
   profileScroll: { paddingBottom: 130 },
   settingsSection: { marginHorizontal: 24, marginTop: 24, gap: 14 },
   settingsCard: { padding: 16, borderRadius: 18 },

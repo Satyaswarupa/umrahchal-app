@@ -1,12 +1,12 @@
 import { Platform, StyleSheet } from 'react-native';
 
-// Brand palette: #040D12 (dominant/dark) / #183D3D (primary) / #5C8374 (accent) / #93B1A6 (light)
+// Brand palette: #093B31 (deepest green) / #0E5B4A (primary green) / #C08A2E (gold accent) / #F6E2B4 (pale gold)
 export const Brand = {
-  darkest: '#040D12',
-  primary: '#183D3D',
-  accent: '#5C8374',
-  light: '#93B1A6',
-  cream: '#F4F1EA',
+  darkest: '#093B31',
+  primary: '#0E5B4A',
+  accent: '#C08A2E',
+  light: '#F6E2B4',
+  cream: '#EAE5DB',
   whatsapp: '#25D366',
 };
 
@@ -34,31 +34,31 @@ export type ThemeColors = {
 // dark shadow pair rather than borders or flat color blocks.
 export const Themes: Record<ColorScheme, ThemeColors> = {
   light: {
-    base: '#E7EDE9',
-    surface: '#E7EDE9',
-    text: Brand.darkest,
-    textMuted: '#5C6E6A',
-    placeholder: '#8A9A95',
-    divider: 'rgba(4,13,18,0.08)',
+    base: '#FFFFFF',
+    surface: '#FFFFFF',
+    text: '#24201A',
+    textMuted: '#6E6455',
+    placeholder: '#9A907C',
+    divider: 'rgba(36,32,26,0.08)',
     accentText: Brand.primary,
     danger: '#B3261E',
-    tabInactive: '#8A9A95',
-    shadowColor: '#AEBCB4',
-    highlightBorder: 'rgba(255,255,255,0.55)',
-    shadowBorder: 'rgba(4,13,18,0.14)',
-    pressedHighlight: 'rgba(255,255,255,0.45)',
-    pressedShadow: 'rgba(4,13,18,0.16)',
+    tabInactive: '#A0967F',
+    shadowColor: '#968A76',
+    highlightBorder: 'rgba(255,255,255,0.6)',
+    shadowBorder: 'rgba(36,32,26,0.14)',
+    pressedHighlight: 'rgba(255,255,255,0.5)',
+    pressedShadow: 'rgba(36,32,26,0.16)',
   },
   dark: {
-    base: '#1A211E',
-    surface: '#1A211E',
-    text: '#EDF2F0',
-    textMuted: '#9AA8A4',
-    placeholder: '#71827D',
+    base: '#161D19',
+    surface: '#161D19',
+    text: '#F1EAD9',
+    textMuted: '#B9AE95',
+    placeholder: '#8C8270',
     divider: 'rgba(255,255,255,0.08)',
     accentText: Brand.light,
     danger: '#FF7A70',
-    tabInactive: '#5C6E6A',
+    tabInactive: '#7C8A80',
     shadowColor: '#000000',
     highlightBorder: 'rgba(255,255,255,0.14)',
     shadowBorder: 'rgba(0,0,0,0.4)',

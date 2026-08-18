@@ -12,7 +12,7 @@ const STEPS = [
   },
   {
     title: 'Review Verified Agents',
-    description: "Browse company details for agents that passed UmrahChal's verification.",
+    description: "Browse company details for agents that passed UmrahJao's verification.",
     icon: 'shield-checkmark-outline' as const,
   },
   {
@@ -28,7 +28,7 @@ export default function HowItWorksScreen() {
   return (
     <ScrollView style={[styles.screen, { backgroundColor: colors.base }]} contentContainerStyle={styles.content}>
       <Text style={[styles.subtitle, { color: colors.textMuted }]}>
-        Finding and booking a trusted Umrah agent on UmrahChal takes just three steps.
+        Finding and booking a trusted Umrah agent on UmrahJao takes just three steps.
       </Text>
 
       <View style={styles.stepsList}>

@@ -55,7 +55,7 @@ function RootNavigator() {
           <Stack.Screen name="enquiry" options={detailScreenOptions('My Enquiry', colors.base, colors.text)} />
           <Stack.Screen
             name="how-it-works"
-            options={detailScreenOptions('How UmrahChal Works', colors.base, colors.text)}
+            options={detailScreenOptions('How UmrahJao Works', colors.base, colors.text)}
           />
           <Stack.Screen name="about" options={detailScreenOptions('About', colors.base, colors.text)} />
         </Stack>

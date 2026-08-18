@@ -46,7 +46,7 @@ export function LoadingScreen() {
         <Animated.View style={[styles.logoWrap, logoStyle]}>
           <Image source={require('../assets/images/icon.png')} style={styles.logo} resizeMode="contain" />
         </Animated.View>
-        <Text style={styles.brandName}>UmrahChal</Text>
+        <Text style={styles.brandName}>UmrahJao</Text>
         <Text style={styles.quote}>Every journey begins with a sincere heart.</Text>
 
         <View style={styles.loaderRow}>

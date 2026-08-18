@@ -3,8 +3,16 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { useTheme } from '@/context/ThemeContext';
 
-export function VerifiedBadge() {
+export function VerifiedBadge({ compact }: { compact?: boolean }) {
   const { colors, edge } = useTheme();
+
+  if (compact) {
+    return (
+      <View style={[styles.iconBadge, { backgroundColor: colors.surface }, edge.raised]}>
+        <Ionicons name="checkmark-circle" size={14} color={colors.accentText} />
+      </View>
+    );
+  }
 
   return (
     <View style={[styles.badge, { backgroundColor: colors.surface }, edge.raised]}>
@@ -24,4 +32,11 @@ const styles = StyleSheet.create({
     borderRadius: 999,
   },
   text: { fontSize: 11, fontWeight: '700' },
+  iconBadge: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "UmrahChal",
+    "name": "UmrahJao",
     "slug": "umrahchalapp",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -49,7 +49,7 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "UmrahChal uses your location to find verified Umrah agents near you."
+          "locationWhenInUsePermission": "UmrahJao uses your location to find verified Umrah agents near you."
         }
       ]
     ],
