@@ -1,4 +1,4 @@
-import { Alert, Linking, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, Image, Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 
@@ -25,6 +25,13 @@ export function AgentCard({ agent }: { agent: AgentSummary }) {
       style={[styles.card, { backgroundColor: colors.surface }, edge.raised]}
       onPress={() => router.push(`/agents/${agent.id}`)}>
       <View style={styles.headerRow}>
+        {agent.profileImage?.url ? (
+          <Image source={{ uri: agent.profileImage.url }} style={styles.avatar} />
+        ) : (
+          <View style={[styles.avatar, styles.avatarFallback, { backgroundColor: colors.base }]}>
+            <Ionicons name="business" size={18} color={colors.textMuted} />
+          </View>
+        )}
         <Text style={[styles.name, { color: colors.text }]} numberOfLines={1}>
           {agent.companyName}
         </Text>
@@ -68,10 +75,12 @@ const styles = StyleSheet.create({
   },
   headerRow: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'space-between',
     gap: 8,
   },
+  avatar: { width: 36, height: 36, borderRadius: 18 },
+  avatarFallback: { alignItems: 'center', justifyContent: 'center' },
   name: { flex: 1, fontSize: 16, fontWeight: '700' },
   location: { marginTop: 4, fontSize: 13 },
   description: { marginTop: 8, fontSize: 13, lineHeight: 18 },

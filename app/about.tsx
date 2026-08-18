@@ -14,7 +14,7 @@ const WHY_US = [
 
 const PHONE = '8810337079';
 const EMAIL = 'support.umrahnoor786@gmail.com';
-const WEBSITE = 'https://umrahnoor.vercel.app/';
+const WEBSITE = 'https://umrahjao.vercel.app/';
 
 export default function AboutScreen() {
   const { colors, edge } = useTheme();

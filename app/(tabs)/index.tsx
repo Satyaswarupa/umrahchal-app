@@ -261,7 +261,7 @@ export default function HomeScreen() {
           label="List your Business for FREE"
           variant="outline"
           style={styles.promoButton}
-          onPress={() => Linking.openURL('https://umrahnoor.vercel.app/admin/signup')}
+          onPress={() => Linking.openURL('https://umrahjao.vercel.app/admin/signup')}
         />
       </View>
     </ScrollView>

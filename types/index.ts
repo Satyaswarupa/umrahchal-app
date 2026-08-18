@@ -1,3 +1,9 @@
+export type AgentDocument = {
+  url: string;
+  publicId: string;
+  name?: string;
+};
+
 export type AgentSummary = {
   id: string;
   companyName: string;
@@ -8,6 +14,7 @@ export type AgentSummary = {
   city: string;
   description: string;
   services: string[];
+  profileImage: AgentDocument | null;
 };
 
 export type AgentDetail = AgentSummary & {
