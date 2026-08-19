@@ -19,14 +19,8 @@ import { Button } from '@/components/ui/Button';
 import { TextField } from '@/components/ui/TextField';
 import { Brand, Fonts } from '@/constants/theme';
 import { useAuth } from '@/context/AuthContext';
-import { useTheme, type ThemeMode } from '@/context/ThemeContext';
+import { useTheme } from '@/context/ThemeContext';
 import { ApiError } from '@/lib/api';
-
-const THEME_OPTIONS: { mode: ThemeMode; icon: keyof typeof Ionicons.glyphMap; label: string }[] = [
-  { mode: 'light', icon: 'sunny-outline', label: 'Light' },
-  { mode: 'system', icon: 'phone-portrait-outline', label: 'Auto' },
-  { mode: 'dark', icon: 'moon-outline', label: 'Dark' },
-];
 
 const SOCIAL_LINKS = [
   { name: 'Facebook', icon: 'logo-facebook' as const, color: '#1877F2' },
@@ -72,48 +66,26 @@ function VersionFooter() {
 }
 
 function SettingsSection() {
-  const { colors, edge, mode, setMode } = useTheme();
+  const { colors, edge } = useTheme();
 
   return (
-    <>
-      <View style={[styles.settingsCard, { backgroundColor: colors.surface }, edge.raised]}>
-        <Text style={[styles.settingsLabel, { color: colors.textMuted }]}>Appearance</Text>
-        <View style={[styles.themeTrack, { backgroundColor: colors.base }, edge.pressed]}>
-          {THEME_OPTIONS.map((option) => {
-            const active = mode === option.mode;
-            return (
-              <Pressable
-                key={option.mode}
-                onPress={() => setMode(option.mode)}
-                style={[styles.themeOption, active && { backgroundColor: colors.surface }, active && edge.raised]}>
-                <Ionicons name={option.icon} size={15} color={active ? colors.accentText : colors.textMuted} />
-                <Text style={[styles.themeOptionText, { color: active ? colors.accentText : colors.textMuted }]}>
-                  {option.label}
-                </Text>
-              </Pressable>
-            );
-          })}
-        </View>
+    <View style={[styles.settingsCard, { backgroundColor: colors.surface }, edge.raised]}>
+      <Text style={[styles.settingsLabel, { color: colors.textMuted }]}>Follow Us</Text>
+      <View style={styles.socialRow}>
+        {SOCIAL_LINKS.map((social) => (
+          <Pressable
+            key={social.name}
+            onPress={() => {}}
+            style={({ pressed }) => [
+              styles.socialButton,
+              { backgroundColor: colors.base },
+              pressed ? edge.pressed : edge.raised,
+            ]}>
+            <Ionicons name={social.icon} size={20} color={social.color} />
+          </Pressable>
+        ))}
       </View>
-
-      <View style={[styles.settingsCard, { backgroundColor: colors.surface }, edge.raised]}>
-        <Text style={[styles.settingsLabel, { color: colors.textMuted }]}>Follow Us</Text>
-        <View style={styles.socialRow}>
-          {SOCIAL_LINKS.map((social) => (
-            <Pressable
-              key={social.name}
-              onPress={() => {}}
-              style={({ pressed }) => [
-                styles.socialButton,
-                { backgroundColor: colors.base },
-                pressed ? edge.pressed : edge.raised,
-              ]}>
-              <Ionicons name={social.icon} size={20} color={social.color} />
-            </Pressable>
-          ))}
-        </View>
-      </View>
-    </>
+    </View>
   );
 }
 
@@ -325,7 +297,7 @@ const styles = StyleSheet.create({
   switchText: { fontSize: 13 },
   switchLink: { fontSize: 13, fontWeight: '700' },
   welcomeCard: {
-    marginHorizontal: 24,
+    marginHorizontal: 0,
     marginTop: 72,
     borderRadius: 24,
     paddingHorizontal: 20,
@@ -381,26 +353,9 @@ const styles = StyleSheet.create({
   labbaikText: { fontFamily: Fonts.serif, fontSize: 19, color: Brand.light, lineHeight: 26 },
   labbaikSub: { marginTop: 8, fontSize: 11.5, color: 'rgba(255,255,255,0.72)', lineHeight: 17 },
   profileScroll: { paddingBottom: 130 },
-  settingsSection: { marginHorizontal: 24, marginTop: 24, gap: 14 },
+  settingsSection: { marginHorizontal: 0, marginTop: 24, gap: 14 },
   settingsCard: { padding: 16, borderRadius: 18 },
   settingsLabel: { fontSize: 11, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 },
-  themeTrack: {
-    marginTop: 10,
-    flexDirection: 'row',
-    borderRadius: 14,
-    padding: 4,
-    gap: 4,
-  },
-  themeOption: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 5,
-    paddingVertical: 8,
-    borderRadius: 10,
-  },
-  themeOptionText: { fontSize: 11, fontWeight: '700' },
   socialRow: { marginTop: 12, flexDirection: 'row', justifyContent: 'center', gap: 14 },
   socialButton: {
     width: 44,
@@ -426,7 +381,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   menuLabel: { flex: 1, fontSize: 15, fontWeight: '600' },
-  divider: { height: 1, marginHorizontal: 24, marginTop: 28 },
+  divider: { height: 1, marginHorizontal: 0, marginTop: 28 },
   logoutRow: {
     marginTop: 18,
     flexDirection: 'row',

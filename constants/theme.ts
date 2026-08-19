@@ -1,9 +1,9 @@
 import { Platform, StyleSheet } from 'react-native';
 
-// Brand palette: #093B31 (deepest green) / #0E5B4A (primary green) / #C08A2E (gold accent) / #F6E2B4 (pale gold)
+// Brand palette: #3A0519 (primary maroon) / #C08A2E (gold accent) / #F6E2B4 (pale gold)
 export const Brand = {
-  darkest: '#093B31',
-  primary: '#0E5B4A',
+  darkest: '#06042a',
+  primary: '#06042a',
   accent: '#C08A2E',
   light: '#F6E2B4',
   cream: '#EAE5DB',

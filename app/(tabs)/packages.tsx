@@ -1,9 +1,10 @@
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { Button } from '@/components/ui/Button';
 import { Brand } from '@/constants/theme';
 import { useTheme } from '@/context/ThemeContext';
 
@@ -92,6 +93,24 @@ export default function PackagesScreen() {
             </View>
           ))}
         </View>
+
+        <LinearGradient
+          colors={[Brand.primary, Brand.darkest]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={[styles.promoCard, edge.raised]}>
+          <Text style={styles.promoTitle}>Are you an Umrah travel agent?</Text>
+          <Text style={styles.promoBody}>
+            Register your company on UmrahJao to reach pilgrims searching for trusted agents in
+            your city.
+          </Text>
+          <Button
+            label="List your Business for FREE"
+            variant="outline"
+            style={styles.promoButton}
+            onPress={() => Linking.openURL('https://umrahjao.vercel.app/admin/signup')}
+          />
+        </LinearGradient>
       </ScrollView>
     </SafeAreaView>
   );
@@ -140,4 +159,14 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   viewButtonText: { fontSize: 13.5, fontWeight: '800' },
+  promoCard: {
+    marginHorizontal: 20,
+    marginTop: 24,
+    padding: 20,
+    borderRadius: 22,
+    overflow: 'hidden',
+  },
+  promoTitle: { color: '#fff', fontSize: 16, fontWeight: '700' },
+  promoBody: { color: 'rgba(255,255,255,0.75)', fontSize: 13, marginTop: 6, lineHeight: 19 },
+  promoButton: { marginTop: 16, backgroundColor: '#fff' },
 });

@@ -79,7 +79,11 @@ export async function resolveNearbyLocation(): Promise<ResolvedLocation> {
     );
   }
 
-  const city = matchCity(state, rawCity);
+  // The curated city list only covers major cities (for the search-bar
+  // autocomplete). GPS can land in a smaller town like Bhadrak that isn't in
+  // that list, so fall back to the geocoder's own city name instead of
+  // dropping it — agents are matched against this string directly.
+  const city = matchCity(state, rawCity) || (rawCity ? rawCity.trim() : '');
   return { state, city, rawRegion, rawCity };
 }
 

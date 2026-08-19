@@ -1,34 +1,31 @@
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router, Tabs, usePathname } from 'expo-router';
-import { Image, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { HapticTab } from '@/components/haptic-tab';
 import { Brand } from '@/constants/theme';
 import { useTheme } from '@/context/ThemeContext';
-import type { EdgeStyles } from '@/constants/theme';
 
 type IconName = keyof typeof Ionicons.glyphMap;
 
-const NAV_ACTIVE_TINT = Brand.light;
+const NAV_ACTIVE_TINT = '#ffffff';
 const NAV_INACTIVE_TINT = 'rgba(255,255,255,0.55)';
-const NAV_ACTIVE_PILL = 'rgba(255,255,255,0.14)';
 
 function TabIcon({
   name,
   activeName,
   focused,
-  edge,
 }: {
   name: IconName;
   activeName: IconName;
   focused: boolean;
-  edge: EdgeStyles;
 }) {
   return (
-    <View style={[styles.tabIconWrap, focused && { backgroundColor: NAV_ACTIVE_PILL }, focused && edge.raised]}>
+    <View style={styles.tabIconWrap}>
       <Ionicons name={focused ? activeName : name} size={20} color={focused ? NAV_ACTIVE_TINT : NAV_INACTIVE_TINT} />
+      {focused && <View style={styles.activeUnderline} />}
     </View>
   );
 }
@@ -80,7 +77,7 @@ export default function TabLayout() {
           name="index"
           options={{
             title: 'Home',
-            tabBarIcon: ({ focused }) => <TabIcon name="home-outline" activeName="home" focused={focused} edge={edge} />,
+            tabBarIcon: ({ focused }) => <TabIcon name="home-outline" activeName="home" focused={focused} />,
           }}
         />
         <Tabs.Screen
@@ -88,7 +85,7 @@ export default function TabLayout() {
           options={{
             title: 'Services',
             tabBarIcon: ({ focused }) => (
-              <TabIcon name="construct-outline" activeName="construct" focused={focused} edge={edge} />
+              <TabIcon name="construct-outline" activeName="construct" focused={focused} />
             ),
           }}
         />
@@ -97,7 +94,7 @@ export default function TabLayout() {
           options={{
             title: 'Packages',
             tabBarIcon: ({ focused }) => (
-              <TabIcon name="briefcase-outline" activeName="briefcase" focused={focused} edge={edge} />
+              <TabIcon name="briefcase-outline" activeName="briefcase" focused={focused} />
             ),
           }}
         />
@@ -106,7 +103,7 @@ export default function TabLayout() {
           options={{
             title: 'Profile',
             tabBarIcon: ({ focused }) => (
-              <TabIcon name="person-circle-outline" activeName="person-circle" focused={focused} edge={edge} />
+              <TabIcon name="person-circle-outline" activeName="person-circle" focused={focused} />
             ),
           }}
         />
@@ -114,8 +111,14 @@ export default function TabLayout() {
 
       <SafeAreaView edges={['top']} pointerEvents="box-none" style={styles.menuButtonSafeArea}>
         {isHome ? (
-          <View style={styles.menuButton} pointerEvents="none">
+          <View style={styles.homeTopRow}>
             <Image source={require('../../assets/images/icon.png')} style={styles.menuLogo} resizeMode="contain" />
+            <Text style={styles.appName}>
+              Umrah<Text style={styles.appNameAccent}>Jao</Text>
+            </Text>
+            <Pressable style={styles.notificationButton} hitSlop={8}>
+              <Ionicons name="notifications-outline" size={20} color="#fff" />
+            </Pressable>
           </View>
         ) : (
           <Pressable
@@ -133,15 +136,29 @@ export default function TabLayout() {
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   menuButtonSafeArea: { position: 'absolute', top: 0, left: 0, right: 0 },
-  menuButton: {
+  homeTopRow: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 8,
-    marginLeft: 16,
     height: 54,
-    paddingHorizontal: 8,
+    paddingHorizontal: 16,
   },
   menuLogo: { width: 40, height: 40, borderRadius: 20 },
+  appName: {
+    flex: 1,
+    textAlign: 'center',
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '800',
+    letterSpacing: 0.3,
+  },
+  appNameAccent: { color: '#E8B20F' },
+  notificationButton: {
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   backButton: {
     width: 40,
     height: 40,
@@ -156,8 +173,14 @@ const styles = StyleSheet.create({
   tabIconWrap: {
     width: 36,
     height: 30,
-    borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 4,
+  },
+  activeUnderline: {
+    width: 16,
+    height: 2.5,
+    borderRadius: 2,
+    backgroundColor: NAV_ACTIVE_TINT,
   },
 });
